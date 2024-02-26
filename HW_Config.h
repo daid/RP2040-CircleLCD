@@ -12,13 +12,15 @@
 
 #define LCD_SPI_PORT    (spi1)
 
-#define SENSOR_I2C_PORT (nullptr)
+#define SENSOR_SDA_PIN  6
+#define SENSOR_SCL_PIN  7
+#define SENSOR_I2C_PORT (i2c1)
 
 void DEV_SPI_WriteByte(spi_inst_t* SPI_PORT,uint8_t Value);
 void DEV_SPI_Write_nByte(spi_inst_t* SPI_PORT,uint8_t *pData, uint32_t Len);
 
 void DEV_I2C_Write_Byte(i2c_inst_t* I2C_PORT, uint8_t addr, uint8_t reg, uint8_t value);
-void DEV_I2C_Read_nByte(i2c_inst_t* I2C_PORT, uint8_t addr, uint8_t reg, void* buf, size_t len);
+void DEV_I2C_Read_nByte(i2c_inst_t* I2C_PORT, uint8_t addr, uint8_t reg, uint8_t* buf, size_t len);
 
 void DEV_Digital_Write(uint16_t Pin, uint8_t Value);
 void DEV_Delay_ms(uint32_t xms);

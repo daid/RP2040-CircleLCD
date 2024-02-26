@@ -1,7 +1,10 @@
 #include "LCD/LCD_1in28.h"
+#include "accel/QMI8658.h"
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
-#include "SDL.h"
+#include "pico/stdio.h"
+#include "pico/stdio_usb.h"
+#include <algorithm>
 
 
 void DEV_GPIO_Mode(uint16_t Pin, uint16_t Mode)
@@ -62,6 +65,11 @@ void drawPoly(Point* points, size_t point_count)
 
 int main(int argc, char** argv)
 {
+    stdio_init_all();
+    for(int n=0; n<1000 && !stdio_usb_connected(); n++) {
+        sleep_ms(1);
+    }
+
     auto slice_num = pwm_gpio_to_slice_num(LCD_BL_PIN);
     pwm_set_wrap(slice_num, 100);
     pwm_set_chan_level(slice_num, PWM_CHAN_B, 0);
@@ -82,6 +90,14 @@ int main(int argc, char** argv)
     spi_init(LCD_SPI_PORT, 27000 * 1000);
     gpio_set_function(LCD_CLK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(LCD_MOSI_PIN, GPIO_FUNC_SPI);
+
+    i2c_init(SENSOR_I2C_PORT, 100 * 1000);
+    gpio_set_function(SENSOR_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(SENSOR_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(SENSOR_SDA_PIN);
+    gpio_pull_up(SENSOR_SCL_PIN);
+
+    QMI8658_init();
 
     LCD_1IN28_Init(HORIZONTAL);
     LCD_1IN28_Clear(BLACK);
