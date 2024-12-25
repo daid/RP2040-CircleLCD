@@ -125,6 +125,7 @@ void gpio_init(unsigned int pin) {}
 void gpio_set_dir(unsigned int pin, unsigned int direction) {}
 void gpio_put(unsigned int pin, unsigned int value) { if (pin < 32) gpio_pin_state[pin] = value; }
 void gpio_set_function(unsigned int pin, unsigned int function) {}
+void gpio_pull_up(unsigned int pin) {}
 
 #include "hardware/pwm.h"
 
@@ -142,4 +143,15 @@ void spi_init(spi_inst_t* inst, unsigned int frequency) {}
 void spi_write_blocking(spi_inst_t* inst, const uint8_t* src, size_t len) {
     while(len--)
         if (!gpio_pin_state[8]) lcd_sim.cmd(*src++); else lcd_sim.data(*src++);
+}
+
+#include "hardware/i2c.h"
+
+struct i2c_inst_t* i2c1;
+
+unsigned int i2c_init (i2c_inst_t *i2c, unsigned int baudrate) { return 0; }
+int i2c_write_blocking (i2c_inst_t *i2c, uint8_t addr, const uint8_t *src, size_t len, bool nostop) { return 0; }
+int i2c_read_blocking (i2c_inst_t *i2c, uint8_t addr, uint8_t *dst, size_t len, bool nostop) {
+    memset(dst, 0, len);
+    return 0;
 }

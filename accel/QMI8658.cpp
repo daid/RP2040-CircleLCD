@@ -34,7 +34,6 @@ static unsigned char QMI8658_slave_addr = QMI8658_SLAVE_ADDR_L;
 unsigned char QMI8658_write_reg(unsigned char reg, unsigned char value)
 {
 	unsigned char ret = 0;
-	unsigned int retry = 0;
 
 	DEV_I2C_Write_Byte(SENSOR_I2C_PORT,QMI8658_slave_addr, reg, value);
 	return ret;
@@ -55,7 +54,6 @@ unsigned char QMI8658_write_regs(unsigned char reg, unsigned char *value, unsign
 unsigned char QMI8658_read_reg(unsigned char reg, unsigned char *buf, unsigned short len)
 {
 	unsigned char ret = 0;
-	unsigned int retry = 0;
 	DEV_I2C_Read_nByte(SENSOR_I2C_PORT,QMI8658_slave_addr, reg, buf, len);
 
 	return ret;
@@ -443,8 +441,8 @@ void QMI8658_read_ae(float quat[4], float velocity[3])
 	raw_q_xyz[2] = (short)((unsigned short)(buf_reg[5] << 8) | (buf_reg[4]));
 	raw_q_xyz[3] = (short)((unsigned short)(buf_reg[7] << 8) | (buf_reg[6]));
 
-	raw_v_xyz[1] = (short)((unsigned short)(buf_reg[9] << 8) | (buf_reg[8]));
-	raw_v_xyz[2] = (short)((unsigned short)(buf_reg[11] << 8) | (buf_reg[10]));
+	raw_v_xyz[0] = (short)((unsigned short)(buf_reg[9] << 8) | (buf_reg[8]));
+	raw_v_xyz[1] = (short)((unsigned short)(buf_reg[11] << 8) | (buf_reg[10]));
 	raw_v_xyz[2] = (short)((unsigned short)(buf_reg[13] << 8) | (buf_reg[12]));
 
 	quat[0] = (float)(raw_q_xyz[0] * 1.0f) / ae_q_lsb_div;
